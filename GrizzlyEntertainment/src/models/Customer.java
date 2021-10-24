@@ -1,5 +1,7 @@
 package models;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +19,8 @@ public class Customer
 	private ResultSet result = null;
 	private int numOfRowsAffected = 0;
 	
-	
+	private static final Logger Logger=LogManager.getLogger(Customer.class);
+
 	public Customer()
 	{
 		connection = DBConnector.getDatabaseConnection();
@@ -42,6 +45,7 @@ public class Customer
 		catch (SQLException e)
 		{
 			System.out.println("SQL Exception thrown" + e.getMessage());
+			Logger.error(" Error SQL Exception thrown" + e.getMessage());
 		}
 	}
 	
