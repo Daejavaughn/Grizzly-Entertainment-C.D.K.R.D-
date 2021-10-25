@@ -39,6 +39,11 @@ public class Customer
 			{
 				JOptionPane.showMessageDialog(null, "Customer record created","Customer Creation",
 						JOptionPane.INFORMATION_MESSAGE);
+				logger.info("New customer added to the system \n");
+			}
+			else if(numOfRowsAffected != 1)
+			{
+				logger.warn("Customer was not added sucessfully try again \n");
 			}
 		}
 		
@@ -69,6 +74,7 @@ public class Customer
 				System.out.println("CustomerID:" + CustID + "\tEquipmentType" + EquipType
 						+ "\tRentalDate is:" + RentalDate + "\tAvailability:" + Availability
 						+ "The estimated cost is:" + Quotation);
+				logger.info("Customer Database Accessed \n");
 			}
 		}
 		
@@ -90,6 +96,10 @@ public class Customer
 			{
 				JOptionPane.showMessageDialog(null, "Customer record updated","Customer record update",
 						JOptionPane.INFORMATION_MESSAGE);
+				logger.info("Customer Database changed, record updated \n");
+			}
+			else {
+				logger.warn("Customer File not updated \n");
 			}
 		}
 		
@@ -111,6 +121,7 @@ public class Customer
 			{
 				JOptionPane.showMessageDialog(null, "Customer record updated","Customer record update",
 						JOptionPane.INFORMATION_MESSAGE);
+				logger.info(" Customer File deleted \n");
 			}
 		}
 		
