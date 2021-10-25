@@ -17,6 +17,7 @@ public class Login {
 	private ResultSet result = null;
 	private int numOfRowsAffected = 0;
 	
+	private static final Logger Logger=LogManager.getLogger(Login.class);
 	
 	public Login()
 	{
@@ -41,6 +42,7 @@ public class Login {
 		catch (SQLException e)
 		{
 			System.out.println("SQL Exception thrown" + e.getMessage());
+			Logger.error(" Error SQL Exception thrown" + e.getMessage());
 		}
 	}
 	
@@ -67,6 +69,7 @@ public class Login {
 		catch (SQLException e)
 		{
 			System.out.println("SQL Exception thrown" + e.getMessage());
+			Logger.error(" Error SQL Exception thrown" + e.getMessage());
 		}
 	}
 	
@@ -88,6 +91,7 @@ public class Login {
 		catch(SQLException e)
 		{
 			System.out.println("SQL Exception thrown" + e.getMessage());
+			Logger.error(" Error SQL Exception thrown" + e.getMessage());
 		}
 	}
 	
@@ -109,6 +113,7 @@ public class Login {
 		catch(SQLException e)
 		{
 			System.out.println("SQL Exception thrown" + e.getMessage());
+			Logger.error(" Error SQL Exception thrown" + e.getMessage());
 		}
 	}
 }
