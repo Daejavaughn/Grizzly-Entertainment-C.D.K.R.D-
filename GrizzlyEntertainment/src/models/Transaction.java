@@ -75,6 +75,7 @@ public class Transaction
 				System.out.println("TransactionID:" +TransactionID + "CustomerID:" + CustID + "\tEquipmentType" + EquipType
 						+ "\tRentalDate is:" + RentalDate + "\tAvailability:" + Availability
 						+ "The estimated cost is:" + Quotation);
+				logger.info("Transaction Table Accessed \n");
 			}
 		}
 		
@@ -97,7 +98,11 @@ public class Transaction
 			{
 				JOptionPane.showMessageDialog(null, "Transaction record updated","Transaction record update",
 						JOptionPane.INFORMATION_MESSAGE);
-				logger.info("Transaction Table Accessed \n");
+				logger.info("Transaction Table Updated \n");
+			}
+			else 
+			{
+				logger.warn("Failed to Update Record \n");
 			}
 		}
 		
