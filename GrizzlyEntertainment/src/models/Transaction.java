@@ -98,6 +98,7 @@ public class Transaction
 		catch(SQLException e)
 		{
 			System.out.println("SQL Exception thrown" + e.getMessage());
+			Logger.error(" Error SQL Exception thrown" + e.getMessage());
 		}
 	}
 	
@@ -119,6 +120,7 @@ public class Transaction
 		catch(SQLException e)
 		{
 			System.out.println("SQL Exception thrown" + e.getMessage());
+			Logger.error(" Error SQL Exception thrown" + e.getMessage());
 		}
 	}
 }
