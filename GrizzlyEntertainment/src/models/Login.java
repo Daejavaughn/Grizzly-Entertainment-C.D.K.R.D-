@@ -36,6 +36,7 @@ public class Login {
 			{
 				JOptionPane.showMessageDialog(null, "record created","Login Creation",
 						JOptionPane.INFORMATION_MESSAGE);
+				logger.info("Login Successful \n");
 			}
 		}
 		
@@ -63,6 +64,7 @@ public class Login {
 				
 				System.out.println("UserType:" + UserType + "\tID: " + ID
 						+ "\tPassword:" + Password);
+				logger.info("Records Accessed \n");
 			}
 		}
 		
@@ -85,6 +87,7 @@ public class Login {
 			{
 				JOptionPane.showMessageDialog(null, "Login record updated","Login record update",
 						JOptionPane.INFORMATION_MESSAGE);
+				logger.info("Password Changed \n");
 			}
 		}
 		
@@ -107,6 +110,7 @@ public class Login {
 			{
 				JOptionPane.showMessageDialog(null, "Login record updated","Login record update",
 						JOptionPane.INFORMATION_MESSAGE);
+				logger.info("User Deleted \n");
 			}
 		}
 		
