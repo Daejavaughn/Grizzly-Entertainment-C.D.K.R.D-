@@ -39,6 +39,11 @@ public class Transaction
 			{
 				JOptionPane.showMessageDialog(null, "Transaction record created","Transaction Creation",
 						JOptionPane.INFORMATION_MESSAGE);
+				logger.info("New transaction made \n");
+			}
+			else 
+			{
+				logger.warn("Failed to create new transaction");
 			}
 		}
 		
@@ -92,6 +97,7 @@ public class Transaction
 			{
 				JOptionPane.showMessageDialog(null, "Transaction record updated","Transaction record update",
 						JOptionPane.INFORMATION_MESSAGE);
+				logger.info("Transaction Table Accessed \n");
 			}
 		}
 		
@@ -114,6 +120,7 @@ public class Transaction
 			{
 				JOptionPane.showMessageDialog(null, "Transaction record updated","Transaction record update",
 						JOptionPane.INFORMATION_MESSAGE);
+				logger.info("Transaction Record Deleted \n");
 			}
 		}
 		
