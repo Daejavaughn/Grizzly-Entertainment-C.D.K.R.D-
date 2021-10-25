@@ -37,6 +37,8 @@ public class Equipment {
 	@Column(name="Cost")
 	private double cost;
 	
+	private static final Logger Logger=LogManager.getLogger(Equipment.class);
+	
 	public Equipment()
 	{
 		
