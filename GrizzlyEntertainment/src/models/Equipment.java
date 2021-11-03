@@ -2,6 +2,8 @@ package models;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +20,13 @@ import org.hibernate.Transaction;
 import factories.SessionFactoryBuilder;
 @Entity
 @Table(name="equipment")
-public class Equipment {
+public class Equipment implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="EquipID")
@@ -32,11 +39,11 @@ public class Equipment {
 	private String category;
 	
 	@Column(name="Available")
-	private boolean available;
+	private String available;
 	
 	@Column(name="Cost")
 	private double cost;
-	
+	Boolean saved;
 	private static final Logger Logger=LogManager.getLogger(Equipment.class);
 	
 	public Equipment()
@@ -44,7 +51,7 @@ public class Equipment {
 		
 	}
 	
-	public Equipment(String Name, String category, boolean available, double cost)
+	public Equipment(String Name, String category, String available, double cost)
 	{
 		this.Name = Name;
 		this.category = category;
@@ -76,11 +83,11 @@ public class Equipment {
 		this.category = category;
 	}
 
-	public boolean getAvailable() {
+	public String getAvailable() {
 		return available;
 	}
 
-	public void setAvailable(boolean available) {
+	public void setAvailable(String available) {
 		this.available = available;
 	}
 
@@ -105,6 +112,7 @@ public class Equipment {
 		Transaction transaction = session.beginTransaction();
 		session.save(this);
 		transaction.commit();
+		saved = true;
 		session.close();
 	}
 	
