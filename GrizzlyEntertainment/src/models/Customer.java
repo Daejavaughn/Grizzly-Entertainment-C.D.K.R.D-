@@ -2,23 +2,45 @@ package models;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
-
 import javax.swing.JOptionPane;
 
 import factories.DBConnector;
 
-public class Customer 
+public class Customer implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Connection connection = null;
 	private Statement stmt = null;
 	private ResultSet result = null;
 	private int numOfRowsAffected = 0;
 	
+	private String CustID;
+	private String EquipType;
+	private Date RentalDate;
+	private String Availability;
+	private double Quotation;
+	
+	
+	
+	public Customer(String custID, String equipType, java.sql.Date rentalDate, String availability, double quotation) {
+		super();
+		CustID = custID;
+		EquipType = equipType;
+		RentalDate = rentalDate;
+		Availability = availability;
+		Quotation = quotation;
+	}
+
 	private static final Logger Logger=LogManager.getLogger(Customer.class);
 
 	public Customer()
@@ -26,6 +48,7 @@ public class Customer
 		connection = DBConnector.getDatabaseConnection();
 	}
 	
+
 	public void create(String CustID, String EquipType, Date RentalDate, String Availability, double Quotation )
 	{
 		String insertSql = "INSERT INTO grizzly.customer (CustID,EquipType,RentalDate,Availability,Quotation) VALUES"
@@ -39,11 +62,11 @@ public class Customer
 			{
 				JOptionPane.showMessageDialog(null, "Customer record created","Customer Creation",
 						JOptionPane.INFORMATION_MESSAGE);
-				logger.info("New customer added to the system \n");
+				Logger.info("New customer added to the system \n");
 			}
 			else if(numOfRowsAffected != 1)
 			{
-				logger.warn("Customer was not added sucessfully try again \n");
+				Logger.warn("Customer was not added sucessfully try again \n");
 			}
 		}
 		
@@ -74,7 +97,7 @@ public class Customer
 				System.out.println("CustomerID:" + CustID + "\tEquipmentType" + EquipType
 						+ "\tRentalDate is:" + RentalDate + "\tAvailability:" + Availability
 						+ "The estimated cost is:" + Quotation);
-				logger.info("Customer Database Accessed \n");
+				Logger.info("Customer Database Accessed \n");
 			}
 		}
 		
@@ -96,10 +119,10 @@ public class Customer
 			{
 				JOptionPane.showMessageDialog(null, "Customer record updated","Customer record update",
 						JOptionPane.INFORMATION_MESSAGE);
-				logger.info("Customer Database changed, record updated \n");
+				Logger.info("Customer Database changed, record updated \n");
 			}
 			else {
-				logger.warn("Customer File not updated \n");
+				Logger.warn("Customer File not updated \n");
 			}
 		}
 		
@@ -121,7 +144,7 @@ public class Customer
 			{
 				JOptionPane.showMessageDialog(null, "Customer record updated","Customer record update",
 						JOptionPane.INFORMATION_MESSAGE);
-				logger.info(" Customer File deleted \n");
+				Logger.info(" Customer File deleted \n");
 			}
 		}
 		
@@ -130,5 +153,54 @@ public class Customer
 			System.out.println("SQL Exception thrown" + e.getMessage());
 		}
 	}
+
+	public String getCustID() {
+		return CustID;
+	}
+
+	public void setCustID(String custID) {
+		CustID = custID;
+	}
+
+	public String getEquipType() {
+		return EquipType;
+	}
+
+	public void setEquipType(String equipType) {
+		EquipType = equipType;
+	}
+
+	public Date getRentalDate() {
+		return RentalDate;
+	}
+
+	public void setRentalDate(Date rentalDate) {
+		RentalDate = rentalDate;
+	}
+
+	public String getAvailability() {
+		return Availability;
+	}
+
+	public void setAvailability(String availability) {
+		Availability = availability;
+	}
+
+	public double getQuotation() {
+		return Quotation;
+	}
+
+	public void setQuotation(double quotation) {
+		Quotation = quotation;
+	}
+
+	@Override
+	public String toString() {
+		return "Customer [CustID=" + CustID + ", EquipType=" + EquipType + ", RentalDate=" + RentalDate
+				+ ", Availability=" + Availability + ", Quotation=" + Quotation + "]";
+	}
+	
+	
 }
+
 
