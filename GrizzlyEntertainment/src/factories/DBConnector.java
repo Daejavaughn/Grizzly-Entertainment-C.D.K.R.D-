@@ -13,7 +13,7 @@ public class DBConnector
 	{
 		if(connection == null)
 		{
-			String url = "jdbc:mysql://localhost:3306/dblab";
+			String url = "jdbc:mysql://localhost:3306/grizzlyserver";
 			
 			try 
 			{
