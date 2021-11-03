@@ -1,10 +1,8 @@
 package main;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,56 +12,26 @@ import java.sql.Statement;
 
 import javax.swing.JOptionPane;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import models.Customer;
 import models.Equipment;
 import models.Login;
 
-//no logging was done here as this class will not be used
-public class Server {
-	
-	private ServerSocket serverSocket;
-	private Socket connectionSocket;
-	private ObjectOutputStream objOs;
-	private ObjectInputStream objIs;
+public class ClientHandler implements Runnable{
+
+	private Socket client;
+	ObjectOutputStream objOs;
+	ObjectInputStream objIs;
 	private static Connection dBConn = null;
 	private Statement stmt;
 	private ResultSet result = null;
+	private static final Logger Logger=LogManager.getLogger(ClientHandler.class);
 	
-	public Server(){
-		
-		this.createConnection();
-		this.waitForRequests();
-	}
-	
-	private void createConnection()
+	public ClientHandler(Socket client)
 	{
-		try {
-			//create new instance of the ServerSocket listening on port 8888
-			serverSocket = new ServerSocket(8888);
-		}
-		catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
-	
-	private void configureStreams()
-	{
-		try {
-			//instantiate the output stream, using the getOutputStream method
-			//of the Socket object as argument to the constructor
-			
-			objOs = new ObjectOutputStream(connectionSocket.getOutputStream());
-			
-			//instantiate the input stream, using the getInputStream method
-			//of the Socket object as argument to the constructor
-			
-			objIs = new ObjectInputStream(connectionSocket.getInputStream());
-			
-		}
-		catch (IOException ex) {
-			ex.printStackTrace();
-		}
+		this.client = client;
 	}
 	
 	private static Connection getDatabaseConnection()
@@ -76,9 +44,11 @@ public class Server {
 				
 				JOptionPane.showMessageDialog(null, "DB Connection Established",
 						"CONNECTION STATUS", JOptionPane.INFORMATION_MESSAGE);
+				Logger.info("Database Connection Established");
 			} catch (SQLException ex) {
 				JOptionPane.showMessageDialog(null, "Could not connect to database\n" + ex,
 						"Connection Failure", JOptionPane.ERROR_MESSAGE);
+				Logger.info("Database Connection Failure");
 			}
 			
 			
@@ -86,16 +56,6 @@ public class Server {
 		return dBConn;
 		
 	}	
-	private void closeConnection()
-	{
-		try {
-			objOs.close();
-			objIs.close();
-			connectionSocket.close();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
 	
 	private void addEquipment(Equipment equipment)
 	{
@@ -113,8 +73,10 @@ public class Server {
 			}
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
+			Logger.error("IOExcepton " + ioe.getMessage());
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.error("IOExcepton " + e.getMessage());
 		}
 		
 	}
@@ -135,8 +97,10 @@ public class Server {
 			}
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
+			Logger.error("IOExcepton " + ioe.getMessage());
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.error("IOExcepton " + e.getMessage());
 		}
 		
 	}
@@ -157,7 +121,9 @@ public class Server {
 			}
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
+			Logger.error("IOExcepton " + ioe.getMessage());
 		} catch (SQLException e) {
+			Logger.error("IOExcepton " + e.getMessage());
 			e.printStackTrace();
 		}
 		
@@ -179,8 +145,10 @@ public class Server {
 			}
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
+			Logger.error("IOExcepton " + ioe.getMessage());
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Logger.error("IOExcepton " + e.getMessage());
 		}
 		
 	}
@@ -201,12 +169,25 @@ public class Server {
 			}
 		} catch (SQLException e) { 
 			e.printStackTrace();
+			Logger.error("IOExcepton " + e.getMessage());
 		}
 			
 		return transactionObj;
 	}
-	private void waitForRequests()
+	private void closeConnection()
 	{
+		try {
+			objOs.close();
+			objIs.close();
+			client.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			Logger.error("IOExcepton " + ex.getMessage());
+		}
+	}
+	
+	@Override
+	public void run() {
 		String action = "";
 		getDatabaseConnection();
 		Equipment equipObj = null;
@@ -214,54 +195,54 @@ public class Server {
 		Customer customerObj = null;
 		models.Transaction transactionObj = null;
 		try {
-			while (true) {
-				connectionSocket = serverSocket.accept();
-				this.configureStreams();
-				try {
-					action = (String) objIs.readObject();
-					
-					if (action.equals("Add Equipment"))
-					{
-						equipObj = (Equipment) objIs.readObject();
-						addEquipment(equipObj);
-						objOs.writeObject(true);
-					} 
-					if (action.equals("Add Login"))
-					{
-						loginObj = (Login) objIs.readObject();
-						addLogin(loginObj);
-						objOs.writeObject(true);
-					} 
-					if (action.equals("Add Customer"))
-					{
-						customerObj = (Customer) objIs.readObject();
-						addCustomer(customerObj);
-						objOs.writeObject(true);
-					} 
-					if (action.equals("Add Transaction"))
-					{
-						transactionObj = (models.Transaction) objIs.readObject();
-						addTransaction(transactionObj);
-						objOs.writeObject(true);
-					}
-					if (action.equals("Find Transaction")) {
-						int transactionId = (int) objIs.readObject();
-						transactionObj = findTransaction(transactionId);
-						objOs.writeObject(transactionObj);
-					}
-				} catch (ClassNotFoundException ex) {
-					ex.printStackTrace();
-				} catch (ClassCastException ex) {
-					ex.printStackTrace();
+			objOs = new ObjectOutputStream(client.getOutputStream());
+			objIs = new ObjectInputStream(client.getInputStream());
+			try {
+				action = (String) objIs.readObject();
+				
+				if (action.equals("Add Equipment"))
+				{
+					equipObj = (Equipment) objIs.readObject();
+					addEquipment(equipObj);
+					objOs.writeObject(true);
+				} 
+				if (action.equals("Add Login"))
+				{
+					loginObj = (Login) objIs.readObject();
+					addLogin(loginObj);
+					objOs.writeObject(true);
+				} 
+				if (action.equals("Add Customer"))
+				{
+					customerObj = (Customer) objIs.readObject();
+					addCustomer(customerObj);
+					objOs.writeObject(true);
+				} 
+				if (action.equals("Add Transaction"))
+				{
+					transactionObj = (models.Transaction) objIs.readObject();
+					addTransaction(transactionObj);
+					objOs.writeObject(true);
 				}
-				this.closeConnection();
+				if (action.equals("Find Transaction")) {
+					int transactionId = (int) objIs.readObject();
+					transactionObj = findTransaction(transactionId);
+					objOs.writeObject(transactionObj);
 				}
-			} catch (EOFException ex) {
-				System.out.println("Client has terminated connections with the server");
+			} catch (ClassNotFoundException ex) {
 				ex.printStackTrace();
-			} catch (IOException ex) {
+				Logger.error("IOExcepton " + ex.getMessage());
+			} catch (ClassCastException ex) {
 				ex.printStackTrace();
+				Logger.error("IOExcepton " + ex.getMessage());
+			} catch (IOException e) {
+				e.printStackTrace();
+				Logger.error("IOExcepton " + e.getMessage());
 			}
-	}
-
+			this.closeConnection();
+			}
+		catch (IOException ex) {
+			ex.printStackTrace();
+		}
+}
 }
