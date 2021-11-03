@@ -1,5 +1,6 @@
 package models;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,14 +9,25 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import factories.DBConnector;
 
-public class Login {
+public class Login implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Connection connection = null;
 	private Statement stmt = null;
 	private ResultSet result = null;
 	private int numOfRowsAffected = 0;
+	
+	private String userType;
+	private String Id;
+	private String password;
 	
 	private static final Logger Logger=LogManager.getLogger(Login.class);
 	
@@ -24,7 +36,7 @@ public class Login {
 		connection = DBConnector.getDatabaseConnection();
 	}
 	
-	public void create(String UserType, String ID, Date Password )
+	public void create(String UserType, String ID, String Password )
 	{
 		String insertSql = "INSERT INTO grizzly.login (UserType,ID,Password) VALUES"
 				+ "('" + UserType + "', '"+ID+"',  '"+Password+"')";
@@ -36,7 +48,7 @@ public class Login {
 			{
 				JOptionPane.showMessageDialog(null, "record created","Login Creation",
 						JOptionPane.INFORMATION_MESSAGE);
-				logger.info("Login Successful \n");
+				Logger.info("Login Successful \n");
 			}
 		}
 		
@@ -64,7 +76,7 @@ public class Login {
 				
 				System.out.println("UserType:" + UserType + "\tID: " + ID
 						+ "\tPassword:" + Password);
-				logger.info("Records Accessed \n");
+				Logger.info("Records Accessed \n");
 			}
 		}
 		
@@ -87,7 +99,7 @@ public class Login {
 			{
 				JOptionPane.showMessageDialog(null, "Login record updated","Login record update",
 						JOptionPane.INFORMATION_MESSAGE);
-				logger.info("Password Changed \n");
+				Logger.info("Password Changed \n");
 			}
 		}
 		
@@ -110,7 +122,7 @@ public class Login {
 			{
 				JOptionPane.showMessageDialog(null, "Login record updated","Login record update",
 						JOptionPane.INFORMATION_MESSAGE);
-				logger.info("User Deleted \n");
+				Logger.info("User Deleted \n");
 			}
 		}
 		
@@ -120,4 +132,41 @@ public class Login {
 			Logger.error(" Error SQL Exception thrown" + e.getMessage());
 		}
 	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
+	public String getId() {
+		return Id;
+	}
+
+	public void setId(String id) {
+		Id = id;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@Override
+	public String toString() {
+		return "Login [userType=" + userType + ", Id=" + Id + ", password=" + password + "]";
+	}
+
+	public Login(String userType, String id, String password) {
+		super();
+		this.userType = userType;
+		Id = id;
+		this.password = password;
+	}
+	
 }
