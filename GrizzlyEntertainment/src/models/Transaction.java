@@ -2,6 +2,8 @@ package models;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,12 +14,23 @@ import javax.swing.JOptionPane;
 
 import factories.DBConnector;
 
-public class Transaction 
+public class Transaction implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Connection connection = null;
 	private Statement stmt = null;
 	private ResultSet result = null;
 	private int numOfRowsAffected = 0;
+	
+	private int id;
+	private String CustID;
+	private String EquipType;
+	private Date RentalDate;
+	private String Availability;
+	private double Cost;
 	
 	private static final Logger Logger=LogManager.getLogger(Transaction.class);
 	
@@ -39,11 +52,11 @@ public class Transaction
 			{
 				JOptionPane.showMessageDialog(null, "Transaction record created","Transaction Creation",
 						JOptionPane.INFORMATION_MESSAGE);
-				logger.info("New transaction made \n");
+				Logger.info("New transaction made \n");
 			}
 			else 
 			{
-				logger.warn("Failed to create new transaction");
+				Logger.warn("Failed to create new transaction");
 			}
 		}
 		
@@ -75,7 +88,7 @@ public class Transaction
 				System.out.println("TransactionID:" +TransactionID + "CustomerID:" + CustID + "\tEquipmentType" + EquipType
 						+ "\tRentalDate is:" + RentalDate + "\tAvailability:" + Availability
 						+ "The estimated cost is:" + Quotation);
-				logger.info("Transaction Table Accessed \n");
+				Logger.info("Transaction Table Accessed \n");
 			}
 		}
 		
@@ -98,11 +111,11 @@ public class Transaction
 			{
 				JOptionPane.showMessageDialog(null, "Transaction record updated","Transaction record update",
 						JOptionPane.INFORMATION_MESSAGE);
-				logger.info("Transaction Table Updated \n");
+				Logger.info("Transaction Table Updated \n");
 			}
 			else 
 			{
-				logger.warn("Failed to Update Record \n");
+				Logger.warn("Failed to Update Record \n");
 			}
 		}
 		
@@ -125,7 +138,7 @@ public class Transaction
 			{
 				JOptionPane.showMessageDialog(null, "Transaction record updated","Transaction record update",
 						JOptionPane.INFORMATION_MESSAGE);
-				logger.info("Transaction Record Deleted \n");
+				Logger.info("Transaction Record Deleted \n");
 			}
 		}
 		
@@ -135,5 +148,71 @@ public class Transaction
 			Logger.error(" Error SQL Exception thrown" + e.getMessage());
 		}
 	}
+
+	public String getCustID() {
+		return CustID;
+	}
+
+	public void setCustID(String custID) {
+		CustID = custID;
+	}
+
+	public String getEquipType() {
+		return EquipType;
+	}
+
+	public void setEquipType(String equipType) {
+		EquipType = equipType;
+	}
+
+	public Date getRentalDate() {
+		return RentalDate;
+	}
+
+	public void setRentalDate(Date rentalDate) {
+		RentalDate = rentalDate;
+	}
+
+	public String getAvailability() {
+		return Availability;
+	}
+
+	public void setAvailability(String availability) {
+		Availability = availability;
+	}
+
+	public double getCost() {
+		return Cost;
+	}
+
+	public void setCost(double cost) {
+		Cost = cost;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "Transaction [id=" + id + ", CustID=" + CustID + ", EquipType=" + EquipType + ", RentalDate="
+				+ RentalDate + ", Availability=" + Availability + ", Cost=" + Cost + "]";
+	}
+
+	public Transaction(String custID, String equipType, java.sql.Date rentalDate, String availability, double cost) {
+		super();
+		CustID = custID;
+		EquipType = equipType;
+		RentalDate = rentalDate;
+		Availability = availability;
+		Cost = cost;
+	}
+	
 }
 
