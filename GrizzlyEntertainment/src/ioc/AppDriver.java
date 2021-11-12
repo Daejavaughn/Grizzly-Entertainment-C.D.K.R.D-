@@ -1,6 +1,6 @@
 package ioc;
 
-import org.springframework. context. support. ClassPathXmlApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class AppDriver 
 {
@@ -8,7 +8,7 @@ public class AppDriver
 	{
 		//load the configuration file
 		ClassPathXmlApplicationContext context;
-			new ClassPathXmlApplicationContext("Beans.×ml");
+			new ClassPathXmlApplicationContext("Beans.xml");
 				//retrieve a bean"
 		Inversion in0bj = (Inversion) context.getBean("Inversion");
            //use the bean object to call method(s)
