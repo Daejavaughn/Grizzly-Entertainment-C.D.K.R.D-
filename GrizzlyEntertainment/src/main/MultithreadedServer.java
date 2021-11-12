@@ -28,7 +28,8 @@ public class MultithreadedServer {
 	{
 		try {
 			//create new instance of the ServerSocket listening on port 8888
-			serverSocket = new ServerSocket(8888);
+			serverSocket = new ServerSocket(8888, 1);
+			Logger.info("Server Connection Creation Attempted");
 		}
 		catch (IOException ex) {
 			ex.printStackTrace();
@@ -42,11 +43,12 @@ public class MultithreadedServer {
 			while (true) {
 				connectionSocket = serverSocket.accept();
 				while (connectionSocket.isConnected()) {
-				ClientHandler c = new ClientHandler(connectionSocket);
-				Thread newThread = new Thread(c);
-				newThread.start();
-				System.out.println("A client has connected");
-				connectionSocket = serverSocket.accept();
+					ClientHandler c = new ClientHandler(connectionSocket);
+					Thread newThread = new Thread(c);
+					newThread.start();
+					System.out.println("A client has connected");
+					connectionSocket = serverSocket.accept();
+					Logger.info("Client-Server Connection Established");
 				}
 	}
 		}catch (EOFException ex) {
