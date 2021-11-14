@@ -12,6 +12,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 import javax.swing.JOptionPane;
+import javax.swing.JInternalFrame;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 
 import factories.DBConnector;
 
@@ -31,6 +37,13 @@ public class Customer implements Serializable
 	private Date RentalDate;
 	private String Availability;
 	private double Quotation;
+	private JLabel customerid;
+	private JLabel equipment;
+	private JLabel rental_date;
+	private JLabel available;
+	private JLabel quota;
+	private JFrame frame;
+	private JButton submit;
 	
 	
 	
@@ -48,6 +61,58 @@ public class Customer implements Serializable
 	public Customer()
 	{
 		connection = DBConnector.getDatabaseConnection();
+	}
+	public void createGUI()
+	{
+		frame = new JFrame("Customer Rental Form");
+		frame.setSize(500, 500);
+		customerid = new JLabel("Cutomer ID ");
+		JTextField custID = new JTextField(20);
+		equipment = new JLabel("Equipment Type ");
+		JTextField equipType = new JTextField(20);
+		rental_date = new JLabel("Rental Date ");
+		JTextField rentalDate = new JTextField(20);
+		available = new JLabel("Avalibility ");
+		JTextField availability = new JTextField(20);
+		quota = new JLabel("Quotation ");
+		JTextField quotation = new JTextField(20);
+		submit = new JButton("submit");
+		
+		customerid.setBounds(15, 20, 90, 30);
+		custID.setBounds(70, 25, 150, 25);
+		equipment.setBounds(15, 60, 90, 30);
+		equipType.setBounds(70, 65, 150, 25);
+		rental_date.setBounds(15, 100, 90, 30);
+		rentalDate.setBounds(70, 105, 150, 25);
+		available.setBounds(15, 140, 90, 30);
+		availability.setBounds(70, 145, 150, 25);
+		quota.setBounds(15, 180, 90, 30);
+		quotation.setBounds(70, 185, 150, 25);
+		submit.setBounds(110, 220, 80, 30);
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		panel.add(customerid);
+		panel.add(custID);
+		panel.add(equipment);
+		panel.add(equipType);
+		panel.add(rental_date);
+		panel.add(rentalDate);
+		panel.add(available);
+		panel.add(availability);
+		panel.add(quota);
+		panel.add(quotation);
+		panel.add(submit);
+		
+		frame.add(panel);
+		frame.setVisible(true);
+		
+		custID = custID.getText();
+		equipType = equipType.getText();
+		rentalDate = rentalDate.getText();
+		availability = availability.getText();
+		quotation = quotation.getText();
+		submit.addActionListener(this);
 	}
 	
 
@@ -201,6 +266,7 @@ public class Customer implements Serializable
 		return "Customer [CustID=" + CustID + ", EquipType=" + EquipType + ", RentalDate=" + RentalDate
 				+ ", Availability=" + Availability + ", Quotation=" + Quotation + "]";
 	}
+	
 	
 	
 }
