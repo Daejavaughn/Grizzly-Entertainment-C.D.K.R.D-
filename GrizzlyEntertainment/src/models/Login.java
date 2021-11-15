@@ -150,7 +150,7 @@ public class Login implements Serializable {
 			e.printStackTrace();
 		}
 	}
-
+	//Implementing Getters and Setters
 	public String getUserType() {
 		return userType;
 	}
