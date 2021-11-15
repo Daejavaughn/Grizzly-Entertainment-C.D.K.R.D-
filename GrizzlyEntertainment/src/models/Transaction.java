@@ -150,7 +150,7 @@ public class Transaction implements Serializable
 			Logger.error(" Error SQL Exception thrown" + e.getMessage());
 		}
 	}
-
+	//Implementing Getters and Setters
 	public String getCustID() {
 		return CustID;
 	}
