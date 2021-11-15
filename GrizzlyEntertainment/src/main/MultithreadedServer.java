@@ -42,10 +42,10 @@ public class MultithreadedServer {
 		try {
 			while (true) {
 				connectionSocket = serverSocket.accept();
-				while (connectionSocket.isConnected()) {
+				while (connectionSocket.isConnected()) {//when the connection is made to the server
 					ClientHandler c = new ClientHandler(connectionSocket);
-					Thread newThread = new Thread(c);
-					newThread.start();
+					Thread newThread = new Thread(c);//new thread is created
+					newThread.start();//creates a client on the new thread
 					System.out.println("A client has connected");
 					connectionSocket = serverSocket.accept();
 					Logger.info("Client-Server Connection Established");
