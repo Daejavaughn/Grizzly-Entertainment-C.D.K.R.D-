@@ -130,7 +130,7 @@ public class Transaction implements Serializable
 	
 	public void delete(String TransactionID)
 	{
-		String deleteSql = "DELETE grizzly.transaction=  WHERE TransactionID = " + TransactionID;
+		String deleteSql = "DELETE grizzly.transaction=  WHERE TransactionID = " + TransactionID;//deletes user information from the system using their TransactionID number as a search term
 		try
 		{
 			stmt = connection.createStatement();
