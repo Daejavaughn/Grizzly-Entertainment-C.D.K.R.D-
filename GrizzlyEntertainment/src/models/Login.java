@@ -2,10 +2,10 @@ package models;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
 
 import javax.swing.JOptionPane;
 
@@ -24,8 +24,8 @@ public class Login implements Serializable {
 	private Statement stmt = null;
 	private ResultSet result = null;
 	private int numOfRowsAffected = 0;
-	
-	private String userType;
+	private PreparedStatement pst = null;
+	private String userType; 
 	private String Id;
 	private String password;
 	
@@ -38,12 +38,12 @@ public class Login implements Serializable {
 	
 	public void create(String UserType, String ID, String Password )
 	{
-		String insertSql = "INSERT INTO grizzly.login (UserType,ID,Password) VALUES"
+		String insertSql = "INSERT INTO grizzly.login (UserType,ID,Password) VALUES"//inserts the login information of users into the database
 				+ "('" + UserType + "', '"+ID+"',  '"+Password+"')";
 		try 
 		{
 			stmt = connection.createStatement();
-			numOfRowsAffected = stmt.executeUpdate(insertSql);
+			numOfRowsAffected = stmt.executeUpdate(insertSql);//runs the sql statement seen above that performs said action
 			if (numOfRowsAffected ==1)
 			{
 				JOptionPane.showMessageDialog(null, "record created","Login Creation",
@@ -61,7 +61,7 @@ public class Login implements Serializable {
 	
 	public void readAll()
 	{
-		String selectSql = "SELECT * FROM grizzly.login WHERE 1=1";
+		String selectSql = "SELECT * FROM grizzly.login WHERE 1=1";//used to display all the information from the login table 
 		try
 		{
 			stmt = connection.createStatement();
@@ -89,8 +89,8 @@ public class Login implements Serializable {
 	
 	public void update(String ID, String newPassword)
 	{
-		String updateSql = "UPDATE grizzly.login SET Password = '" + newPassword + "' WHERE ID = " + ID;
-		try
+		String updateSql = "UPDATE grizzly.login SET Password = '" + newPassword + "' WHERE ID = " + ID; //updates information in the login table using
+		try																								 // the user's id to locate their data
 		{
 			stmt = connection.createStatement();
 			
@@ -112,7 +112,7 @@ public class Login implements Serializable {
 	
 	public void delete(String ID)
 	{
-		String deleteSql = "DELETE grizzly.login WHERE ID = " + ID;
+		String deleteSql = "DELETE grizzly.login WHERE ID = " + ID; //deletes user information from the system using their ID number as a search term
 		try
 		{
 			stmt = connection.createStatement();
@@ -130,6 +130,24 @@ public class Login implements Serializable {
 		{
 			System.out.println("SQL Exception thrown" + e.getMessage());
 			Logger.error(" Error SQL Exception thrown" + e.getMessage());
+		}
+	}
+	public void verifyLogin(String id, String psw, String uType)//accepts the user's id, password and usertype and checks the database for a match
+	{
+		String sql = "SELECT * FROM grizzlyserver.login WHERE UserType=? and ID=? and Password=?";
+		try {
+			pst = connection.prepareStatement(sql);
+			pst.setString(1, uType);
+			pst.setString(2, id);
+			pst.setString(3,  psw);
+			
+			result = pst.executeQuery();
+			if(result.next()) { //if a match is found
+				JOptionPane.showMessageDialog(null, "Success, you're logged in as "+result.getString("UserType"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -156,6 +174,7 @@ public class Login implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
 
 	@Override
 	public String toString() {
