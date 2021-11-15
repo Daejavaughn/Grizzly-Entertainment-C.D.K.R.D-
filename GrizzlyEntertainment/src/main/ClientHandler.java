@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -25,10 +26,10 @@ public class ClientHandler implements Runnable{
 	ObjectOutputStream objOs;
 	ObjectInputStream objIs;
 	private static Connection dBConn = null;
-	private Statement stmt;
+	public boolean loggedIn;
+	private Statement stmt; 
 	private ResultSet result = null;
 	private static final Logger Logger=LogManager.getLogger(ClientHandler.class);
-	
 	public ClientHandler(Socket client)
 	{
 		this.client = client;
@@ -36,7 +37,7 @@ public class ClientHandler implements Runnable{
 	
 	private static Connection getDatabaseConnection()
 	{
-		if (dBConn == null)
+		if (dBConn == null)//if there is connection to the database presently
 		{
 			try {
 				String url = "jdbc:mysql://localhost:3306/grizzlyserver";
@@ -53,7 +54,7 @@ public class ClientHandler implements Runnable{
 			
 			
 		}
-		return dBConn;
+		return dBConn;//returns the state of the database connection
 		
 	}	
 	
@@ -104,6 +105,7 @@ public class ClientHandler implements Runnable{
 		}
 		
 	}
+	
 	
 	private void addCustomer(Customer customer)
 	{
@@ -174,6 +176,43 @@ public class ClientHandler implements Runnable{
 			
 		return transactionObj;
 	}
+	public void verifyLogin(Login login)
+	{
+		PreparedStatement pst = null;
+		String sql = "SELECT * FROM grizzlyserver.login WHERE UserType=? and ID=? and Password=?";
+		try {
+			pst = dBConn.prepareStatement(sql);
+			pst.setString(1, login.getUserType());
+			pst.setString(2, login.getId());
+			pst.setString(3,  login.getPassword());
+			result = pst.executeQuery();
+			if(result.next()) {
+				JOptionPane.showMessageDialog(null, "Success, you're logged in as "+result.getString("UserType"));
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void viewEquipment(String eid, String name, String cat, String avail, double cost)
+	{
+		PreparedStatement pst = null;
+		String sql = "SELECT * FROM grizzlyserver.equipment";
+		try {
+			pst = dBConn.prepareStatement(sql);
+			result = pst.executeQuery();;
+			if(result.next()) {
+
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean loginStatus()
+	{
+		return loggedIn;
+	}
 	private void closeConnection()
 	{
 		try {
@@ -229,6 +268,11 @@ public class ClientHandler implements Runnable{
 					transactionObj = findTransaction(transactionId);
 					objOs.writeObject(transactionObj);
 				}
+				if (action.equals("Verify Login")) {
+					loginObj = (Login) objIs.readObject();
+					verifyLogin(loginObj);
+				}
+				
 			} catch (ClassNotFoundException ex) {
 				ex.printStackTrace();
 				Logger.error("IOExcepton " + ex.getMessage());
