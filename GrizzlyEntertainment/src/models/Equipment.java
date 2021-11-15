@@ -50,7 +50,7 @@ public class Equipment implements Serializable{
 	{
 		
 	}
-	
+	//Implementing Copy Constructor
 	public Equipment(String Name, String category, String available, double cost)
 	{
 		this.Name = Name;
@@ -58,7 +58,7 @@ public class Equipment implements Serializable{
 		this.available = available;
 		this.cost = cost;
 	}
-
+	//Implementing Getters and Setters
 	public int getId() {
 		return id;
 	}
