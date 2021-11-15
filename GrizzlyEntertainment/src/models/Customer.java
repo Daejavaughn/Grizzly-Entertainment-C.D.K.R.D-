@@ -31,7 +31,7 @@ public class Customer implements Serializable
 	private double Quotation;
 	
 	
-	
+	//Implementing the Default Constructor
 	public Customer(String custID, String equipType, java.sql.Date rentalDate, String availability, double quotation) {
 		super();
 		CustID = custID;
@@ -153,7 +153,7 @@ public class Customer implements Serializable
 			System.out.println("SQL Exception thrown" + e.getMessage());
 		}
 	}
-
+//Implementing the Getters and Setters
 	public String getCustID() {
 		return CustID;
 	}
