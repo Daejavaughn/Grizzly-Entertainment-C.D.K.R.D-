@@ -45,7 +45,7 @@ public class Customer implements Serializable
 
 	public Customer()
 	{
-		connection = DBConnector.getDatabaseConnection();
+		connection = DBConnector.getDatabaseConnection(); // DatabaseConnection is stored in variable connection
 	}
 	
 
